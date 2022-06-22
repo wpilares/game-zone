@@ -1,3 +1,4 @@
+import { GamesService } from '../services/games.service';
 import {
   Body,
   Controller,
@@ -13,15 +14,18 @@ import {
 
 @Controller('games')
 export class GamesController {
+  constructor(private gamesService: GamesService) {}
+
   @Get()
   getGames(
     @Query('limit') limit = 100,
     @Query('offset') offset = 0,
     @Query('brand') brand: string,
   ) {
-    return {
-      message: `Games: limit=> ${limit}, offset=> ${offset}, brand=>${brand}`,
-    };
+    // return {
+    //   message: `Games: limit=> ${limit}, offset=> ${offset}, brand=>${brand}`,
+    // };
+    return this.gamesService.findAll();
   }
 
   @Get('filter')
@@ -34,25 +38,24 @@ export class GamesController {
   @Get(':gameId')
   @HttpCode(HttpStatus.ACCEPTED)
   getGame(@Param('gameId') gameId: number) {
-    return {
-      message: `Game ${gameId}`,
-    };
+    // return {
+    //   message: `Game ${gameId}`,
+    // };
+    return this.gamesService.findOne(+gameId);
   }
 
   @Post()
   create(@Body() payload: any) {
-    return {
-      message: 'Accion de Crear',
-      payload,
-    };
+    // return {
+    //   message: 'Accion de Crear',
+    //   payload,
+    // };
+    return this.gamesService.create(payload);
   }
 
   @Put(':gameId')
   update(@Param('gameId') gameId: number, @Body() payload: any) {
-    return {
-      gameId,
-      payload,
-    };
+    return this.gamesService.update(+gameId, payload);
   }
 
   @Delete(':gameId')
